@@ -20,7 +20,7 @@ A small notes service for students. It provides a REST API and a simple web UI t
 
 ## Run with Docker (recommended)
 ```bash
-git clone https://github.com/<your-username>/Campus-Notes-Service.git
+git clone https://github.com/dfjggh/Campus-Notes-Service.git
 cd Campus-Notes-Service
 docker build -t campus-notes-service .
 docker run -d --name campus-notes -p 3000:3000 campus-notes-service
