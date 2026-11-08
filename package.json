@@ -1,0 +1,15 @@
+{
+  "name": "campus-notes-service",
+  "version": "1.0.0",
+  "description": "A small notes service for students: REST API + web UI, runnable with Docker.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/app.test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": { "node": ">=20" }
+}

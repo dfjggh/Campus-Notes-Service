@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Notes</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;background:#f5f7fb;color:#222}
+  h1{color:#1a4fd6}
+  form{display:grid;gap:.5rem;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 1px 4px #0002}
+  input,textarea,button{padding:.6rem;border:1px solid #ccd;border-radius:6px;font:inherit}
+  button{background:#1a4fd6;color:#fff;border:none;cursor:pointer}
+  .note{background:#fff;margin-top:.8rem;padding:1rem;border-radius:10px;box-shadow:0 1px 4px #0002}
+  .note small{color:#667}
+  .del{background:#d62a2a;float:right;padding:.3rem .6rem}
+</style>
+</head>
+<body>
+<h1>📚 Campus Notes</h1>
+<form id="f">
+  <input id="title" placeholder="Title" required>
+  <input id="course" placeholder="Course (e.g. OS Lab)">
+  <textarea id="content" rows="3" placeholder="Write your note..."></textarea>
+  <button>Add note</button>
+</form>
+<div id="list"></div>
+<script>
+const list = document.getElementById('list');
+const esc = (s) => s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function load(){
+  const notes = await (await fetch('/api/notes')).json();
+  list.innerHTML = notes.map(n => `
+    <div class="note">
+      <button class="del" onclick="del('${n.id}')">Delete</button>
+      <strong>${esc(n.title)}</strong> <small>• ${esc(n.course)}</small>
+      <p>${esc(n.content)}</p>
+      <small>${new Date(n.createdAt).toLocaleString()}</small>
+    </div>`).join('') || '<p>No notes yet.</p>';
+}
+async function del(id){ await fetch('/api/notes/'+id,{method:'DELETE'}); load(); }
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await fetch('/api/notes',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({title:title.value,course:course.value,content:content.value})});
+  e.target.reset(); load();
+});
+load();
+</script>
+</body>
+</html>
