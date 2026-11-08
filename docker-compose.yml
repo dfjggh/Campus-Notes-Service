@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    image: campus-notes-service:latest
+    container_name: campus-notes
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DATA_FILE=/app/data/notes.json
+    volumes:
+      - notes-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  notes-data:
